@@ -1,5 +1,7 @@
 import os
 import re
+from slugify import slugify
+
 
 output_path = os.fspath("./output/")
 input_file_path = os.fspath("./input.txt")
@@ -34,7 +36,7 @@ def parse_list() -> None:
                 continue
             elif "increased Pack size" in line:
                 # TODO: code to insert the data into the modgroup file
-                print(mod_group)
+                print(generate_mod_group_name(mod_group))
                 mod_group = []
                 continue
             output_line = line
@@ -48,7 +50,7 @@ def parse_list() -> None:
 
 
 def generate_mod_group_name(mod_group: list) -> str:
-    pass
+    return slugify(mod_group[-1])
 
 
 def replace_numbers_and_ranges(string_to_process: str) -> str:
