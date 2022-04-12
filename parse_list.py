@@ -59,9 +59,9 @@ def insert_mod_group_file(mod_group: list) -> None:
             log_file.write("## EXISTS ## " + mod_group_name + "\n")
         else:
             with open(mod_group_file_path, "a") as mod_group_file:
-                log_file.write("## CREATED ##" + mod_group_name + "\n")
+                log_file.write("## CREATED ## " + mod_group_name + "\n")
                 for line in mod_group:
-                    log_file.write("## ADDED ##" + line + " to " + mod_group_name + "\n")
+                    log_file.write("## ADDED ## " + line + " to " + mod_group_name + "\n")
                     mod_group_file.write(line + "\n")
 
 
