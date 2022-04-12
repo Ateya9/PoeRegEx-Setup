@@ -3,8 +3,8 @@ import re
 from slugify import slugify
 
 
-output_path = os.fspath("./output/")
-log_file_path = os.fspath(output_path + "/log.txt")
+output_folder = os.fspath("./output/")
+log_file_path = os.fspath(output_folder + "/log.txt")
 
 
 def check_requirements(required_file: str) -> bool:
@@ -12,8 +12,8 @@ def check_requirements(required_file: str) -> bool:
     Checks whether the required file exists, and creates the output folder.
     :return:
     """
-    if not os.path.exists(output_path):
-        os.mkdir(output_path)
+    if not os.path.exists(output_folder):
+        os.mkdir(output_folder)
     return os.path.exists(required_file)
 
 
@@ -52,7 +52,7 @@ def generate_mod_group_name(mod_group: list) -> str:
 
 def insert_mod_group_file(mod_group: list) -> None:
     mod_group_name = generate_mod_group_name(mod_group)
-    mod_group_file_path = output_path + mod_group_name
+    mod_group_file_path = output_folder + mod_group_name
     with open(log_file_path, "a") as log_file:
         if os.path.exists(mod_group_file_path):
             log_file.write("## EXISTS ## " + mod_group_name + "\n")
