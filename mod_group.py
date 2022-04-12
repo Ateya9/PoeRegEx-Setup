@@ -1,5 +1,6 @@
 import os
 import re
+from typing import List
 
 
 class ModGroup:
@@ -14,6 +15,9 @@ class ModGroup:
             for line in mod_file:
                 if line.strip():
                     self.__mods.append(line.strip())
+
+    def __str__(self) -> str:
+        return ', '.join(self.__mods)
 
     def check_for_regex_match(self, regex: str) -> bool:
         for mod in self.__mods:
