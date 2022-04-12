@@ -1,7 +1,9 @@
 venv
 venv/*
 venv/**
-input.txt
+input_low.txt
+input_mid.txt
+input_high.txt
 output
 output/*
 output/**

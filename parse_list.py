@@ -4,25 +4,24 @@ from slugify import slugify
 
 
 output_path = os.fspath("./output/")
-input_file_path = os.fspath("./input.txt")
 log_file_path = os.fspath(output_path + "/log.txt")
 
 
-def check_requirements() -> bool:
+def check_requirements(required_file: str) -> bool:
     """
     Checks whether the required file exists, and creates the output folder.
     :return:
     """
     if not os.path.exists(output_path):
         os.mkdir(output_path)
-    return os.path.exists(input_file_path)
+    return os.path.exists(required_file)
 
 
-def parse_list() -> None:
-    if not check_requirements():
+def parse_list(list_file_name: str) -> None:
+    if not check_requirements(list_file_name):
         print('Input file does not exist. Please paste the mods into a file called "input.txt".')
         return
-    with open(input_file_path, "r") as input_file:
+    with open(list_file_name, "r") as input_file:
         input_file_lines = input_file.readlines()
     mod_group = []
     for line in input_file_lines:
@@ -132,4 +131,6 @@ def remove_preceding_mod_info(string_to_process: str) -> str:
 
 
 if __name__ == "__main__":
-    parse_list()
+    parse_list("./input_low.txt")
+    parse_list("./input_mid.txt")
+    parse_list("./input_high.txt")
