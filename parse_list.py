@@ -22,35 +22,47 @@ def parse_list() -> None:
     if not check_requirements():
         print('Input file does not exist. Please paste the mods into a file called "input.txt".')
         return
-    with open(log_file_path, "a") as log_file:
-        with open(input_file_path, "r") as input_file:
-            input_file_lines = input_file.readlines()
-        mod_group = []
-        for line in input_file_lines:
-            if "increased Quantity of Items found in this Area" in line:
-                continue
-            elif "increased Rarity of Items found in this Area" in line:
-                continue
-            elif line.startswith(("map", "Prefix", "Suffix")):
-                # Skip irrelevant lines like 'map extra content weighting [0]'
-                continue
-            elif "increased Pack size" in line:
-                # TODO: code to insert the data into the modgroup file
-                print(generate_mod_group_name(mod_group))
-                mod_group = []
-                continue
-            output_line = line
-            output_line = remove_preceding_mod_info(output_line)
-            if output_line.startswith("Total"):
-                # There should be one line with just 'Total', skip this line.
-                continue
-            output_line = replace_numbers_and_ranges(output_line)
-            output_line = output_line.strip()
-            mod_group.append(output_line)
+    with open(input_file_path, "r") as input_file:
+        input_file_lines = input_file.readlines()
+    mod_group = []
+    for line in input_file_lines:
+        if "increased Quantity of Items found in this Area" in line:
+            continue
+        elif "increased Rarity of Items found in this Area" in line:
+            continue
+        elif line.startswith(("map", "Prefix", "Suffix")):
+            # Skip irrelevant lines like 'map extra content weighting [0]'
+            continue
+        elif "increased Pack size" in line:
+            insert_mod_group_file(mod_group)
+            mod_group = []
+            continue
+        output_line = line
+        output_line = remove_preceding_mod_info(output_line)
+        if output_line.startswith("Total"):
+            # There should be one line with just 'Total', skip this line.
+            continue
+        output_line = replace_numbers_and_ranges(output_line)
+        output_line = output_line.strip()
+        mod_group.append(output_line)
 
 
 def generate_mod_group_name(mod_group: list) -> str:
     return slugify(mod_group[-1])
+
+
+def insert_mod_group_file(mod_group: list) -> None:
+    mod_group_name = generate_mod_group_name(mod_group)
+    mod_group_file_path = output_path + mod_group_name
+    with open(log_file_path, "a") as log_file:
+        if os.path.exists(mod_group_file_path):
+            log_file.write(mod_group_name + " already exists.\n")
+        else:
+            with open(mod_group_file_path, "a") as mod_group_file:
+                log_file.write(mod_group_name + " created.\n")
+                for line in mod_group:
+                    log_file.write(line + " added to " + mod_group_name + "\n")
+                    mod_group_file.write(line + "\n")
 
 
 def replace_numbers_and_ranges(string_to_process: str) -> str:
