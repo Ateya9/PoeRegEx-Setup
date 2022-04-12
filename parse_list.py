@@ -73,6 +73,7 @@ def replace_numbers_and_ranges(string_to_process: str) -> str:
     """
     output = string_to_process
     output = re.sub(r'\(\d+–\d+\)', "#", output)
+    output = re.sub(r'\(-\d+–-\d+\)', "-#", output)
     output = re.sub(r'\d+', "#", output)
     return output
 
