@@ -6,8 +6,12 @@ output_folder = "./output/"
 
 
 def check_requirements() -> bool:
+    """
+    Checks whether the output folder exists and if it has items in it.
+    :return:
+    """
     if not os.path.exists(output_folder):
-        os.mkdir(output_folder)
+        return False
     if len(os.listdir(output_folder)) <= 1:
         # No mods are in the folder.
         return False
@@ -15,6 +19,10 @@ def check_requirements() -> bool:
 
 
 def generate_mod_groups() -> list[ModGroup]:
+    """
+    Generates a ModGroup item for each file in output.
+    :return:
+    """
     output_list = []
     for mod_group_file in os.listdir(output_folder):
         if mod_group_file == "log.txt":
@@ -25,6 +33,12 @@ def generate_mod_groups() -> list[ModGroup]:
 
 
 def calculate_regex_matches(mod_group_to_test: ModGroup = None) -> MatchCollection:
+    """
+    Tests every potential regular expression against every ModGroup and adds them to a MatchCollection if
+    relevant.
+    :param mod_group_to_test:
+    :return:
+    """
     check_requirements()
     if mod_group_to_test is None:
         mod_groups = generate_mod_groups()
@@ -32,7 +46,6 @@ def calculate_regex_matches(mod_group_to_test: ModGroup = None) -> MatchCollecti
         mod_groups = [mod_group_to_test]
     test_mod_groups = generate_mod_groups()
     output = MatchCollection()
-    # TODO: Check banned words list
     for mod_group in mod_groups:
         potential_regexes = generate_potential_regexes(mod_group)
         for potential_regex in potential_regexes:
@@ -53,6 +66,12 @@ def calculate_regex_matches(mod_group_to_test: ModGroup = None) -> MatchCollecti
 
 
 def generate_potential_regexes(mod_group: ModGroup) -> list[str]:
+    """
+    Generates a list of potential regular expressions to be compared to each ModGroup.
+    :param mod_group:
+    :return:
+    """
+    # TODO: remove a 'potential' regex if it matches something in the banned words list.
     output = []
     # for each mod in the mod group, take incremental snips of letters (from 2 to 4
     # in length) to be used in the regular expressions. Eg 'more monster' would return
@@ -122,6 +141,12 @@ def generate_potential_regexes(mod_group: ModGroup) -> list[str]:
 
 
 def replace_invalid_regex_chars(input_regex: str) -> str:
+    """
+    Replaces invalid characters in the regular expressions. Such as; makes sure any plus signs
+    are preceded by a backslash.
+    :param input_regex:
+    :return:
+    """
     output = input_regex
     output = output.replace("+", r"\+")
     output = output.replace("#", "\\d+")
@@ -129,6 +154,12 @@ def replace_invalid_regex_chars(input_regex: str) -> str:
 
 
 def get_unmatched_mods(mod_groups: list[ModGroup], match_collection: MatchCollection) -> list[str]:
+    """
+    Finds any ModGroups that don't have a one way match in the supplied MatchCollection.
+    :param mod_groups:
+    :param match_collection:
+    :return:
+    """
     output = []
     for mod in mod_groups:
         if frozenset({mod.mod_group_name}) not in match_collection.one_way_matches:
