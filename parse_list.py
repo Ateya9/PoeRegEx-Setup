@@ -31,18 +31,18 @@ def parse_poedb_list(list_file_name: str) -> None:
         input_file_lines = input_file.readlines()
     mod_group = []
     for line in input_file_lines:
-        if "increased Quantity of Items found in this Area" in line:
+        output_line = line.strip()
+        if "increased Quantity of Items found in this Area" in output_line:
             continue
-        elif "increased Rarity of Items found in this Area" in line:
+        elif "increased Rarity of Items found in this Area" in output_line:
             continue
-        elif line.startswith(("map", "Prefix", "Suffix")):
+        elif output_line.startswith(("map", "Prefix", "Suffix")):
             # Skip irrelevant lines like 'map extra content weighting [0]'
             continue
-        elif "increased Pack size" in line:
+        elif "increased Pack size" in output_line:
             insert_mod_group_file(mod_group)
             mod_group = []
             continue
-        output_line = line
         output_line = remove_preceding_mod_info(output_line)
         if output_line.startswith("Total"):
             # There should be one line with just 'Total', skip this line.
@@ -99,7 +99,7 @@ def remove_preceding_mod_info(string_to_process: str) -> str:
     :param string_to_process:
     :return:
     """
-    output = string_to_process
+    output = string_to_process.strip()
     mod_types = ["physical_damage",
                  "elemental_damage",
                  "resource",
