@@ -3,12 +3,24 @@ class MatchCollection:
     max_match_dict_size = 3
 
     def __init__(self) -> None:
+        """
+        Contains multiple dictionaries containing regular expressions and their matches.
+        """
         super().__init__()
         self.one_way_matches = dict()
         self.two_way_matches = dict()
         self.three_way_matches = dict()
 
-    def add_to_dict(self, key: set, value: str) -> None:
+    def add_to_dict(self, key: set[str], value: str) -> None:
+        """
+        Adds a key and value to the relevant dictionary of matches, depending on
+        how many item are in the key. If the key already exists in the dictionary,
+        this function checks if the value trying to be inserted is longer than
+        what is already in the dictionary. If it is, the value is not added.
+        :param key:
+        :param value:
+        :return:
+        """
         match len(key):
             case 1:
                 dict_to_add_to = self.one_way_matches
