@@ -23,7 +23,7 @@ def generate_mod_groups() -> list[ModGroup]:
     return output_list
 
 
-def output_regexes() -> None:
+def calculate_regex_matches() -> None:
     check_requirements()
     mod_groups = generate_mod_groups()
     one_way_matches = dict()
@@ -31,15 +31,12 @@ def output_regexes() -> None:
     three_way_matches = dict()
     # TODO: Check banned words list
     number_of_matches = 0
-    regex_iterator = 0
-    regex_length = 2
     confirmed_regex = ""
     for mod_group in mod_groups:
-        for mod in mod_group.get_mods():
-
-            potential_regex = mod[regex_iterator:regex_length]
+        potential_regexes = generate_potential_regexes(mod_group)
+        for potential_regex in potential_regexes:
             for test_mod_group in mod_groups:
-                pass
+
 
 
 def generate_potential_regexes(mod_group: ModGroup) -> list[str]:
@@ -75,8 +72,4 @@ def generate_potential_regexes(mod_group: ModGroup) -> list[str]:
 
 
 if __name__ == "__main__":
-    # output_regexes()
-    mod_groups = generate_mod_groups()
-    print(mod_groups[1].get_mods()[0])
-    potential_regexes = generate_potential_regexes(mod_groups[1])
-    print(potential_regexes)
+    calculate_regex_matches()
