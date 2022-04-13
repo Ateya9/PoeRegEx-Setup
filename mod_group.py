@@ -21,7 +21,7 @@ class ModGroup:
 
     def check_for_regex_match(self, regex: str) -> bool:
         for mod in self.__mods:
-            if re.search(regex, mod):
+            if re.search(regex, mod.replace("#", "1")):
                 return True
         return False
 
