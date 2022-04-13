@@ -38,4 +38,5 @@ class MatchCollection:
                 # If the regex that's already in as a match is shorter than what is trying
                 # to be added, don't overwrite it.
                 return
+            # TODO: Add in a check to see which is shorter; what's being added or each item individually.
         dict_to_add_to[key] = value
