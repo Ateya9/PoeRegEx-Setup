@@ -57,6 +57,11 @@ def parse_poedb_list(list_file_name: str) -> None:
             mod_group.append(output_line)
 
 
+def parse_non_poedb_list(list_file_name: str) -> None:
+    # TODO: Define a function to parse a plain list, such as item base types.
+    pass
+
+
 def generate_mod_group_name(mod_group: list) -> str:
     """
     generates a filesystem friendly name of a mod group.
