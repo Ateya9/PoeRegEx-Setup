@@ -4,6 +4,7 @@ from match_collection import MatchCollection
 
 output_folder = "./output/"
 
+
 def check_requirements() -> bool:
     if not os.path.exists(output_folder):
         os.mkdir(output_folder)
@@ -83,5 +84,13 @@ def replace_invalid_regex_chars(input_regex: str) -> str:
 
 
 if __name__ == "__main__":
-    calculate_regex_matches()
-    print("after")
+    matches = calculate_regex_matches()
+    print(str(len(matches.one_way_matches)) + " one way matches.")
+    for k, v in matches.one_way_matches.items():
+        print(k, " : ", v)
+    print(str(len(matches.two_way_matches)) + " two way matches.")
+    for k, v in matches.two_way_matches.items():
+        print(k, " : ", v)
+    print(str(len(matches.three_way_matches)) + " three way matches.")
+    for k, v in matches.three_way_matches.items():
+        print(k, " : ", v)
