@@ -8,7 +8,7 @@ class MatchCollection:
         self.two_way_matches = dict()
         self.three_way_matches = dict()
 
-    def __add_to_dict(self, key: set, value: str) -> None:
+    def add_to_dict(self, key: set, value: str) -> None:
         match len(key):
             case 1:
                 dict_to_add_to = self.one_way_matches
