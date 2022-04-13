@@ -24,16 +24,20 @@ def generate_mod_groups() -> list[ModGroup]:
     return output_list
 
 
-def calculate_regex_matches() -> MatchCollection:
+def calculate_regex_matches(mod_group_to_test: ModGroup = None) -> MatchCollection:
     check_requirements()
-    mod_groups = generate_mod_groups()
+    if mod_group_to_test is None:
+        mod_groups = generate_mod_groups()
+    else:
+        mod_groups = [mod_group_to_test]
+    test_mod_groups = generate_mod_groups()
     output = MatchCollection()
     # TODO: Check banned words list
     for mod_group in mod_groups:
         potential_regexes = generate_potential_regexes(mod_group)
         for potential_regex in potential_regexes:
             matches = set()
-            for test_mod_group in mod_groups:
+            for test_mod_group in test_mod_groups:
                 if test_mod_group.check_for_regex_match(potential_regex):
                     matches.add(test_mod_group.mod_group_name)
             if len(matches) > output.max_match_dict_size:
@@ -97,7 +101,7 @@ def get_unmatched_mods(mod_groups: list[ModGroup], match_collection: MatchCollec
 
 
 if __name__ == "__main__":
-    matches = calculate_regex_matches()
+    matches = calculate_regex_matches(ModGroup("increased-monster-damage"))
     print(str(len(matches.one_way_matches)) + " one way matches.")
     for k, v in matches.one_way_matches.items():
         print(f"{k} : '{v}'")
