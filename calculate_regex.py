@@ -61,14 +61,9 @@ def generate_potential_regexes(mod_group: ModGroup) -> list[str]:
                 potential_regex = replace_invalid_regex_chars(potential_regex)
                 output.append(potential_regex)
         # Take snips with space between them (varying space between but snips are always 2 long)
-        for i in range(len(mod) - 1):
+        for i in range(len(mod) - 3):
             space_between_snips = 0
             for y in range(i + 2, len(mod) - 1):
-                if "#" in mod[i + 2:y]:
-                    # If there's a number anywhere between the two parts being snipped, the
-                    # regular expression is invalid. This is because sometimes the numbers
-                    # in the mod can be different lengths.
-                    continue
                 first_snip = mod[i:i + 2]
                 first_snip = replace_invalid_regex_chars(first_snip)
                 second_snip = mod[y:y + 2]
@@ -79,7 +74,7 @@ def generate_potential_regexes(mod_group: ModGroup) -> list[str]:
                     case 1:
                         inbetween_snip = "."
                     case _:
-                        inbetween_snip = ".{" + str(space_between_snips) + "}"
+                        inbetween_snip = ".+"
                 final_regex = first_snip + inbetween_snip + second_snip
                 output.append(final_regex)
                 space_between_snips += 1
@@ -87,8 +82,9 @@ def generate_potential_regexes(mod_group: ModGroup) -> list[str]:
 
 
 def replace_invalid_regex_chars(input_regex: str) -> str:
-    output = input_regex.replace("#", "\\d+")
+    output = input_regex
     output = output.replace("+", r"\+")
+    output = output.replace("#", "\\d+")
     return output
 
 
@@ -102,12 +98,12 @@ def get_unmatched_mods(mod_groups: list[ModGroup], match_collection: MatchCollec
 
 if __name__ == "__main__":
     matches = calculate_regex_matches()
-    # print(str(len(matches.one_way_matches)) + " one way matches.")
-    # for k, v in matches.one_way_matches.items():
-    #     print(f"{k} : '{v}'")
-    # print(str(len(matches.two_way_matches)) + " two way matches.")
-    # for k, v in matches.two_way_matches.items():
-    #     print(f"{k} : '{v}'")
-    # print(str(len(matches.three_way_matches)) + " three way matches.")
-    # for k, v in matches.three_way_matches.items():
-    #     print(f"{k} : '{v}'")
+    print(str(len(matches.one_way_matches)) + " one way matches.")
+    for k, v in matches.one_way_matches.items():
+        print(f"{k} : '{v}'")
+    print(str(len(matches.two_way_matches)) + " two way matches.")
+    for k, v in matches.two_way_matches.items():
+        print(f"{k} : '{v}'")
+    print(str(len(matches.three_way_matches)) + " three way matches.")
+    for k, v in matches.three_way_matches.items():
+        print(f"{k} : '{v}'")
