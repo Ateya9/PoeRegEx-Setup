@@ -17,7 +17,13 @@ def check_requirements(required_file: str) -> bool:
     return os.path.exists(required_file)
 
 
-def parse_list(list_file_name: str) -> None:
+def parse_poedb_list(list_file_name: str) -> None:
+    """
+    Takes a file containing a raw copy+paste from poedb.tw, removes any extra info (such as mod weightings
+    and types) and inserts the mod info into separate files in ./output.
+    :param list_file_name:
+    :return:
+    """
     if not check_requirements(list_file_name):
         print('Input file does not exist. Please paste the mods into a file called "input.txt".')
         return
@@ -47,10 +53,20 @@ def parse_list(list_file_name: str) -> None:
 
 
 def generate_mod_group_name(mod_group: list) -> str:
+    """
+    generates a filesystem friendly name of a mod group.
+    :param mod_group:
+    :return:
+    """
     return slugify(mod_group[-1])
 
 
 def insert_mod_group_file(mod_group: list) -> None:
+    """
+    Create a file for a mod_group and insert the mods into it.
+    :param mod_group:
+    :return:
+    """
     mod_group_name = generate_mod_group_name(mod_group)
     mod_group_file_path = output_folder + mod_group_name
     with open(log_file_path, "a") as log_file:
@@ -123,7 +139,6 @@ def remove_preceding_mod_info(string_to_process: str) -> str:
         # This line has relevant numbers after two numbers that need to be removed.
         output = output[2:]
         return output
-
     while re.match("^[0-9].*$", output):
         # Remove numbers that appear just after the mod types.
         output = output[1:]
@@ -131,6 +146,6 @@ def remove_preceding_mod_info(string_to_process: str) -> str:
 
 
 if __name__ == "__main__":
-    parse_list("./input_low.txt")
-    parse_list("./input_mid.txt")
-    parse_list("./input_high.txt")
+    parse_poedb_list("./input_low.txt")
+    parse_poedb_list("./input_mid.txt")
+    parse_poedb_list("./input_high.txt")
