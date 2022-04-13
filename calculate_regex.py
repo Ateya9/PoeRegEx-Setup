@@ -1,8 +1,8 @@
 import os
 from mod_group import ModGroup
+from match_collection import MatchCollection
 
 output_folder = "./output/"
-
 
 def check_requirements() -> bool:
     if not os.path.exists(output_folder):
@@ -23,27 +23,31 @@ def generate_mod_groups() -> list[ModGroup]:
     return output_list
 
 
-def calculate_regex_matches() -> None:
+def calculate_regex_matches() -> MatchCollection:
     check_requirements()
     mod_groups = generate_mod_groups()
-    one_way_matches = dict()
-    two_way_matches = dict()
-    three_way_matches = dict()
+    output = MatchCollection()
     # TODO: Check banned words list
-    number_of_matches = 0
-    confirmed_regex = ""
     for mod_group in mod_groups:
         potential_regexes = generate_potential_regexes(mod_group)
         for potential_regex in potential_regexes:
+            matches = set()
             for test_mod_group in mod_groups:
                 if test_mod_group.check_for_regex_match(potential_regex):
-                    number_of_matches += 1
+                    matches.add(test_mod_group.mod_group_name)
+            if len(matches) > output.max_match_dict_size:
+                # This if statement is unnecessary as the MatchCollection object
+                # already handles this.
+                continue
+            output.add_to_dict(matches, potential_regex)
+    return output
 
 
 def generate_potential_regexes(mod_group: ModGroup) -> list[str]:
     output = []
-    # for each mod in the mod group, take incremental snips of letters (from 2 to 4 in length) to be used
-    # in the regular expressions. Eg 'more monster' would return ['mo', 'or', 're', 'mor', 'ore' ...etc]
+    # for each mod in the mod group, take incremental snips of letters (from 2 to 4
+    # in length) to be used in the regular expressions. Eg 'more monster' would return
+    # ['mo', 'or', 're', 'mor', 'ore' ...etc]
     for mod in mod_group.get_mods():
         for snip_length in range(2, 5):
             # Take snips of varying lengths (2 to 4)
