@@ -36,7 +36,11 @@ def calculate_regex_matches() -> None:
         potential_regexes = generate_potential_regexes(mod_group)
         for potential_regex in potential_regexes:
             for test_mod_group in mod_groups:
-
+                if test_mod_group.check_for_regex_match(potential_regex):
+                    number_of_matches += 1
+                    print(potential_regex + " is a match for " + test_mod_group.mod_group_name)
+                else:
+                    print(potential_regex + " is NOT a match for " + test_mod_group.mod_group_name)
 
 
 def generate_potential_regexes(mod_group: ModGroup) -> list[str]:
@@ -73,3 +77,4 @@ def generate_potential_regexes(mod_group: ModGroup) -> list[str]:
 
 if __name__ == "__main__":
     calculate_regex_matches()
+    print("after")
