@@ -24,3 +24,6 @@ class ModGroup:
             if re.search(regex, mod):
                 return True
         return False
+
+    def get_mods(self) -> list[str]:
+        return self.__mods
