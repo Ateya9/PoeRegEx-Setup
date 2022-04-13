@@ -1,6 +1,6 @@
 class MatchCollection:
 
-    max_match_dict_size = 3
+    max_match_dict_size = 4
 
     def __init__(self) -> None:
         """
@@ -10,6 +10,7 @@ class MatchCollection:
         self.one_way_matches = dict()
         self.two_way_matches = dict()
         self.three_way_matches = dict()
+        self.four_way_matches = dict()
 
     def add_to_dict(self, key: frozenset[str], value: str) -> None:
         """
@@ -28,6 +29,8 @@ class MatchCollection:
                 dict_to_add_to = self.two_way_matches
             case 3:
                 dict_to_add_to = self.three_way_matches
+            case 4:
+                dict_to_add_to = self.four_way_matches
             case _:
                 return
         if key in dict_to_add_to:

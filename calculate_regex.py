@@ -51,6 +51,9 @@ def calculate_regex_matches(mod_group_to_test: ModGroup = None) -> MatchCollecti
         for potential_regex in potential_regexes:
             matches = set()
             for test_mod_group in test_mod_groups:
+                if len(matches) > output.max_match_dict_size:
+                    # If we've already got too many matches, skip.
+                    continue
                 if test_mod_group.check_for_regex_match(potential_regex):
                     matches.add(test_mod_group.mod_group_name)
             if len(matches) > output.max_match_dict_size:
@@ -168,13 +171,17 @@ def get_unmatched_mods(mod_groups: list[ModGroup], match_collection: MatchCollec
 
 
 if __name__ == "__main__":
+    # Testing
     matches = calculate_regex_matches()
-    print(str(len(matches.one_way_matches)) + " one way matches.")
+    print("####" + str(len(matches.one_way_matches)) + " one way matches. ####")
     for k, v in matches.one_way_matches.items():
         print(f"{k} : '{v}'")
-    print(str(len(matches.two_way_matches)) + " two way matches.")
+    print("####" + str(len(matches.two_way_matches)) + " two way matches. ####")
     for k, v in matches.two_way_matches.items():
         print(f"{k} : '{v}'")
-    print(str(len(matches.three_way_matches)) + " three way matches.")
+    print("####" + str(len(matches.three_way_matches)) + " three way matches. ####")
     for k, v in matches.three_way_matches.items():
+        print(f"{k} : '{v}'")
+    print("####" + str(len(matches.four_way_matches)) + " four way matches. ####")
+    for k, v in matches.four_way_matches.items():
         print(f"{k} : '{v}'")
