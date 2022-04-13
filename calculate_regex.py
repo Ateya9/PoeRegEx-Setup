@@ -41,6 +41,10 @@ def calculate_regex_matches() -> MatchCollection:
                 # already handles this.
                 continue
             output.add_to_dict(frozenset(matches), potential_regex)
+    no_matches = get_unmatched_mods(mod_groups, output)
+    if len(no_matches) > 0:
+        for mod in no_matches:
+            print(mod + " has no matches!")
     return output
 
 
@@ -50,8 +54,8 @@ def generate_potential_regexes(mod_group: ModGroup) -> list[str]:
     # in length) to be used in the regular expressions. Eg 'more monster' would return
     # ['mo', 'or', 're', 'mor', 'ore' ...etc]
     for mod in mod_group.get_mods():
-        for snip_length in range(2, 5):
-            # Take snips of varying lengths (2 to 4)
+        for snip_length in range(2, 9):
+            # Take snips of varying lengths (2 to 8)
             for i in range(len(mod) - snip_length + 1):
                 potential_regex = mod[i:i + snip_length]
                 potential_regex = replace_invalid_regex_chars(potential_regex)
@@ -60,6 +64,11 @@ def generate_potential_regexes(mod_group: ModGroup) -> list[str]:
         for i in range(len(mod) - 1):
             space_between_snips = 0
             for y in range(i + 2, len(mod) - 1):
+                if "#" in mod[i + 2:y]:
+                    # If there's a number anywhere between the two parts being snipped, the
+                    # regular expression is invalid. This is because sometimes the numbers
+                    # in the mod can be different lengths.
+                    continue
                 first_snip = mod[i:i + 2]
                 first_snip = replace_invalid_regex_chars(first_snip)
                 second_snip = mod[y:y + 2]
@@ -78,19 +87,27 @@ def generate_potential_regexes(mod_group: ModGroup) -> list[str]:
 
 
 def replace_invalid_regex_chars(input_regex: str) -> str:
-    output = input_regex.replace("#", "\\d*")
+    output = input_regex.replace("#", "\\d+")
     output = output.replace("+", r"\+")
+    return output
+
+
+def get_unmatched_mods(mod_groups: list[ModGroup], match_collection: MatchCollection) -> list[str]:
+    output = []
+    for mod in mod_groups:
+        if frozenset({mod.mod_group_name}) not in match_collection.one_way_matches:
+            output.append(mod.mod_group_name)
     return output
 
 
 if __name__ == "__main__":
     matches = calculate_regex_matches()
-    print(str(len(matches.one_way_matches)) + " one way matches.")
-    for k, v in matches.one_way_matches.items():
-        print(k, " : ", v)
-    print(str(len(matches.two_way_matches)) + " two way matches.")
-    for k, v in matches.two_way_matches.items():
-        print(k, " : ", v)
-    print(str(len(matches.three_way_matches)) + " three way matches.")
-    for k, v in matches.three_way_matches.items():
-        print(k, " : ", v)
+    # print(str(len(matches.one_way_matches)) + " one way matches.")
+    # for k, v in matches.one_way_matches.items():
+    #     print(f"{k} : '{v}'")
+    # print(str(len(matches.two_way_matches)) + " two way matches.")
+    # for k, v in matches.two_way_matches.items():
+    #     print(f"{k} : '{v}'")
+    # print(str(len(matches.three_way_matches)) + " three way matches.")
+    # for k, v in matches.three_way_matches.items():
+    #     print(f"{k} : '{v}'")
