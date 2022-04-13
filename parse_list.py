@@ -124,7 +124,7 @@ def remove_preceding_mod_info(string_to_process: str) -> str:
     if "increased Monster Cast Speed" in output:
         # This line actually has relevant numbers here, so we don't want to continue removing numbers.
         return output
-    while re.match("^[0-9].*$", output):
+    while re.match(r'^\d.*$', output):
         # Remove all numbers at the start of the line.
         output = output[1:]
     i = 0
@@ -139,7 +139,7 @@ def remove_preceding_mod_info(string_to_process: str) -> str:
         # This line has relevant numbers after two numbers that need to be removed.
         output = output[2:]
         return output
-    while re.match("^[0-9].*$", output):
+    while re.match(r'^\d.*$', output):
         # Remove numbers that appear just after the mod types.
         output = output[1:]
     return output
