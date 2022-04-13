@@ -1,5 +1,4 @@
 import os
-import sys
 from mod_group import ModGroup
 
 output_folder = "./output/"
