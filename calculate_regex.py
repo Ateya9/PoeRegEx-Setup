@@ -58,12 +58,16 @@ def generate_potential_regexes(mod_group: ModGroup) -> list[str]:
     # in length) to be used in the regular expressions. Eg 'more monster' would return
     # ['mo', 'or', 're', 'mor', 'ore' ...etc]
     for mod in mod_group.get_mods():
+
+        # ---Single Snip---
         for snip_length in range(2, 9):
             # Take snips of varying lengths (2 to 8)
             for i in range(len(mod) - snip_length + 1):
                 potential_regex = mod[i:i + snip_length]
                 potential_regex = replace_invalid_regex_chars(potential_regex)
                 output.append(potential_regex)
+
+        # ---Double snip with space inbetween---
         # Take snips with space between them (varying space between but snips are always 2 long)
         for i in range(len(mod) - 3):
             space_between_snips = 0
@@ -82,6 +86,38 @@ def generate_potential_regexes(mod_group: ModGroup) -> list[str]:
                 final_regex = first_snip + inbetween_snip + second_snip
                 output.append(final_regex)
                 space_between_snips += 1
+
+        # ---Triple snip with space inbetween---
+        # Same as above but 3 snips.
+        for i in range(len(mod) - 5):
+            space_between_left_snip = 0
+            for y in range(i + 2, len(mod) - 3):
+                space_between_right_snip = 0
+                for x in range(y + 2, len(mod) - 1):
+                    first_snip = mod[i:i + 2]
+                    first_snip = replace_invalid_regex_chars(first_snip)
+                    second_snip = mod[y:y + 2]
+                    second_snip = replace_invalid_regex_chars(second_snip)
+                    third_snip = mod[x:x + 2]
+                    third_snip = replace_invalid_regex_chars(third_snip)
+                    match space_between_left_snip:
+                        case 0:
+                            inbetween_left_snip = ""
+                        case 1:
+                            inbetween_left_snip = "."
+                        case _:
+                            inbetween_left_snip = ".+"
+                    match space_between_right_snip:
+                        case 0:
+                            inbetween_right_snip = ""
+                        case 1:
+                            inbetween_right_snip = "."
+                        case _:
+                            inbetween_right_snip = ".+"
+                    final_regex = first_snip + inbetween_left_snip + second_snip + inbetween_right_snip + third_snip
+                    output.append(final_regex)
+                    space_between_right_snip += 1
+                space_between_left_snip += 1
     return output
 
 
@@ -101,7 +137,7 @@ def get_unmatched_mods(mod_groups: list[ModGroup], match_collection: MatchCollec
 
 
 if __name__ == "__main__":
-    matches = calculate_regex_matches(ModGroup("increased-monster-damage"))
+    matches = calculate_regex_matches()
     print(str(len(matches.one_way_matches)) + " one way matches.")
     for k, v in matches.one_way_matches.items():
         print(f"{k} : '{v}'")
