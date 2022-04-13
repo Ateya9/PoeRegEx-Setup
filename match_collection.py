@@ -11,7 +11,7 @@ class MatchCollection:
         self.two_way_matches = dict()
         self.three_way_matches = dict()
 
-    def add_to_dict(self, key: set[str], value: str) -> None:
+    def add_to_dict(self, key: frozenset[str], value: str) -> None:
         """
         Adds a key and value to the relevant dictionary of matches, depending on
         how many item are in the key. If the key already exists in the dictionary,

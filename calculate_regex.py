@@ -40,7 +40,7 @@ def calculate_regex_matches() -> MatchCollection:
                 # This if statement is unnecessary as the MatchCollection object
                 # already handles this.
                 continue
-            output.add_to_dict(matches, potential_regex)
+            output.add_to_dict(frozenset(matches), potential_regex)
     return output
 
 
