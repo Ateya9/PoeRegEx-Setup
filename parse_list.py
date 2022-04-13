@@ -49,7 +49,12 @@ def parse_poedb_list(list_file_name: str) -> None:
             continue
         output_line = replace_numbers_and_ranges(output_line)
         output_line = output_line.strip()
-        mod_group.append(output_line)
+        if "Monsters cannot be Stunned" in output_line and "more Monster Life" in mod_group[0]:
+            # Unwavering monsters has the % more monster life mod that comes along with it, which
+            # is the same as another mod, so we need to remove it.
+            mod_group[0] = output_line
+        else:
+            mod_group.append(output_line)
 
 
 def generate_mod_group_name(mod_group: list) -> str:
